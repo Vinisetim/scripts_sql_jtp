@@ -33,6 +33,7 @@ SELECT
     V.[viagens.atividade],
     v.[viagens.statusSaida],
     v.[viagens.justificativa],
+    v.[viagens.tabela],
 
     -- Regra da FAIXA HORÁRIA (Manhã: 02:30 às 12:00, Tarde: 12:00 às 18:00, Noite: resto)
     -- Simplificando para avaliar apenas a HORA inteira (ajuste se os minutos forem vitais)
@@ -65,6 +66,7 @@ SELECT
     DATEDIFF(MINUTE, V.INICIO_PROGRAMADO, V.FIM_PROGRAMADO) AS TEMPO_PROGRAMADO_MIN,
     DATEDIFF(MINUTE, V.INICIO_REALIZADO, V.FIM_REALIZADO) AS TEMPO_REALIZADO_MIN,
     DATEDIFF(MINUTE, V.INICIO_PROGRAMADO, V.INICIO_REALIZADO) AS PARTIDAS_DIF_MIN,
+    DATEDIFF(MINUTE, V.FIM_PROGRAMADO, V.FIM_REALIZADO) AS CHEGADA_DIF_MIN,
 
     ROW_NUMBER() OVER(
         PARTITION BY V.DATA_OPERACIONAL, V.[viagens.veiculo]
@@ -89,7 +91,24 @@ SELECT
         WHEN V.[viagens.sentido] = 'I' THEN ISNULL(L.KM_PREVISTO_IDA, 0.00)
         WHEN V.[viagens.sentido] = 'V' THEN ISNULL(L.KM_PREVISTO_VOLTA, 0.00)
         ELSE 0
-    END AS KM_REALIZADO
+    END AS KM_REALIZADO,
+
+CASE 
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%ABSENTEÍSMO%' THEN 'ABSENTEÍSMO'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%BLOQUEIO%' THEN 'BLOQUEIO'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%NATURAIS%' THEN 'FEN NATURAIS'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%GREVE%' THEN 'GREVE'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%GPS%' OR UPPER(V.[viagens.justificativa]) LIKE '%GPRS%' THEN 'GPS/GPRS'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%RA %' OR UPPER(V.[viagens.justificativa]) LIKE '%SOS%' OR UPPER(V.[viagens.justificativa]) LIKE '%FALTA DE CARRO%' THEN 'MANUTENÇÃO/QUEBRA'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%REMANEJAMENTO DE OPERADOR%' THEN 'REMAN OPERADOR'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '% RO %' OR UPPER(V.[viagens.justificativa]) LIKE '%RO-%' OR UPPER(V.[viagens.justificativa]) LIKE 'RO %' THEN 'RO'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%SERVIÇO EXTERNO%' THEN 'SERV EXTERNO'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%INSUFICIENTE%' THEN 'TEMPO INSUFICIENTE'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%CONGESTIONADO%' THEN 'TRANS CONGEST'
+        WHEN UPPER(V.[viagens.justificativa]) LIKE '%VISTORIA%' THEN 'VISTORIA'
+        WHEN V.[viagens.justificativa] IS NOT NULL AND V.[viagens.justificativa] != '' THEN 'OUTROS'
+        ELSE NULL
+    END AS MOTIVO_OCORRENCIA
 
 FROM Viagens_Data_Operacional AS V
 
@@ -108,3 +127,4 @@ LEFT JOIN VW_DIM_MOTORISTA AS M
 LEFT JOIN DIM_FERIADOS AS F
     ON V.DATA_OPERACIONAL = F.DATA_FERIADO
     AND (V.GARAGEM = F.OPERACAO OR F.OPERACAO = 'TODOS');
+
