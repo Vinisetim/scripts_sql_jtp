@@ -1,14 +1,14 @@
-CREATE VIEW VW_DIM_MOTORISTA AS
+CREATE VIEW app.vw_dim_motorista AS
 SELECT 
     -- 1. ROW_NUMBER(): A Window Function que gera a nossa Chave Primária (ID) na View
-    ROW_NUMBER() OVER(ORDER BY [viagens.motorista]) AS ID_MOTORISTA,
+    ROW_NUMBER() OVER(ORDER BY [viagens_motorista]) AS id_motorista,
     
     -- 2. A matrícula oficial do motorista
-    [viagens.motorista] AS MATRICULA_MOTORISTA
+    [viagens_motorista] AS matricula_motorista
     
 FROM (
     -- 3. Subquery: Filtra a base gigante antes de numerar
-    SELECT DISTINCT [viagens.motorista]
-    FROM STG_CITTATI_VIAGENS
-    WHERE [viagens.motorista] IS NOT NULL
-) AS MotoristasUnicos;
+    SELECT DISTINCT [viagens_motorista]
+    FROM stg.stg_cittati_viagens
+    WHERE [viagens_motorista] IS NOT NULL
+) AS motoristas_unicos;

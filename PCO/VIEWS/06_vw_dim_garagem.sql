@@ -1,10 +1,10 @@
-CREATE VIEW VM_DIM_GARAGEM AS
+CREATE VIEW app.vw_dim_garagem AS
 SELECT
-    ROW_NUMBER() OVER(ORDER BY GARAGEM) AS ID_GARAGEM,
-    GARAGEM AS NOME_GARAGEM
+    ROW_NUMBER() OVER(ORDER BY garagem) AS id_garagem,
+    garagem AS nome_garagem
 
 FROM(
-    SELECT DISTINCT GARAGEM
-    FROM STG_CITTATI_VIAGENS
-    WHERE GARAGEM IS NOT NULL
-) GARAGENSUNICAS;
+    SELECT DISTINCT garagem
+    FROM stg.stg_cittati_viagens
+    WHERE garagem IS NOT NULL
+) garagensunicas;

@@ -1,5 +1,5 @@
 
-INSERT INTO DIM_FERIADOS (DATA_FERIADO, NOME_FERIADO, TIPO_FROTA, OPERACAO)
+INSERT INTO dw.dim_feriados (data_feriado, nome_feriado, tipo_frota, operacao)
 VALUES
     ('2024-01-01', 'Confraternização Universal', 'DOMINGO', 'TODOS'),
     ('2024-03-29', 'Sexta-feira Santa', 'DOMINGO', 'TODOS'),

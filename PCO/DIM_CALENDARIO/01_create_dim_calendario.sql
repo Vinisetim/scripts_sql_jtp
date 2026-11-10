@@ -1,32 +1,33 @@
-CREATE TABLE DIM_CALENDARIO(
-    ID_CALENDARIO INT PRIMARY KEY,
-    DATA_COMPLETA DATE,
-    ANO INT,
-    MES INT,
-    DIA INT,
-    NOME_MES VARCHAR(20),
-    NOME_ABREV VARCHAR(5),
-    TRIMESTRE INT,
-    DIA_SEMANA INT, 
-    NOME_DIA_SEMANA VARCHAR(20),
-    TIPO_DIA_PADRAO VARCHAR(15)
+
+CREATE TABLE dw.dim_calendario(
+    id_calendario INT PRIMARY KEY,
+    data_completa DATE,
+    ano INT,
+    mes INT,
+    dia INT,
+    nome_mes VARCHAR(20),
+    nome_abrev VARCHAR(5),
+    trimestre INT,
+    dia_semana INT, 
+    nome_dia_semana VARCHAR(20),
+    tipo_dia_padrao VARCHAR(15)
 );
 
-CREATE VIEW VW_DIM_CALENDARIO AS
+CREATE VIEW app.vw_dim_calendario AS
 SELECT 
-    ID_CALENDARIO,
-    DATA_COMPLETA,
-    ANO,
-    MES,
-    DIA,
-    NOME_MES,
-    NOME_ABREV,
-    TRIMESTRE,
-    DIA_SEMANA,
-    NOME_DIA_SEMANA,
-    TIPO_DIA_PADRAO,
+    id_calendario,
+    data_completa,
+    ano,
+    mes,
+    dia,
+    nome_mes,
+    nome_abrev,
+    trimestre,
+    dia_semana,
+    nome_dia_semana,
+    tipo_dia_padrao,
     CASE 
-        WHEN DATA_COMPLETA <= CAST(DATEADD(HOUR, -3, GETDATE()) AS DATE) THEN 1 
+        WHEN data_completa <= CAST(DATEADD(HOUR, -3, GETDATE()) AS DATE) THEN 1 
         ELSE 0 
-    END AS FLG_PASSADO
-FROM DIM_CALENDARIO;
+    END AS flg_passado
+FROM dw.dim_calendario;

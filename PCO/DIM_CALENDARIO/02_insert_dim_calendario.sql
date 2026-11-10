@@ -3,10 +3,10 @@ DECLARE @DataFinal Date = '2030-12-01';
 
 WHILE @DataAtual <= @DataFinal
 BEGIN 
-    INSERT INTO DIM_CALENDARIO(
-        ID_CALENDARIO, DATA_COMPLETA, ANO, MES, DIA,
-        NOME_MES, NOME_ABREV, TRIMESTRE,DIA_SEMANA,
-        NOME_DIA_SEMANA,TIPO_DIA_PADRAO
+    INSERT INTO dw.dim_calendario(
+        id_calendario, data_completa, ano, mes, dia,
+        nome_mes, nome_abrev, trimestre,dia_semana,
+        nome_dia_semana,tipo_dia_padrao
     )
     VALUES(
         CAST(FORMAT(@DataAtual, 'yyyyMMdd') AS INT),

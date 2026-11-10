@@ -1,0 +1,12 @@
+┌───────────────────────────────────────┐       ┌───────────────────────────────────────┐
+│                 VIEW                  │       │           STORED PROCEDURE            │
+│       (Projeção Lógica / Leitura)     │       │       (Carga / Lógica de Estado)      │
+├───────────────────────────────────────┤       ├───────────────────────────────────────┤
+│ • Apenas SELECT sem efeitos colaterais│       │ • Executa INSERT, UPDATE, MERGE, DDL  │
+│ • Camada de abstração para o Power BI │       │ • Orquestra cargas de stg para dw     │
+│ • Renomeia colunas para o negócio     │       │ • Usa transações (BEGIN / COMMIT)     │
+│ • Aplica filtros simples (ex.: ativo) │       │ • Grava logs e trata erros com TRY/CATCH│
+└───────────────────────────────────────┘       └───────────────────────────────────────┘
+
+
+
