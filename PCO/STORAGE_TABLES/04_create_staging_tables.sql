@@ -28,5 +28,4 @@ CREATE TABLE stg.stg_cittati_viagens(
     retorno_ok BIT,
 );
 
-CREATE NONCLUSTERED INDEX ix_stg_cittati_viagens_data
-ON stg.stg_cittati_viagens (viagens_data);
+
